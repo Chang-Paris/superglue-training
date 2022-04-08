@@ -68,10 +68,10 @@ class matcher(nn.Module):
         self.layer_num=config.layer_num
         self.sink_iter=config.sink_iter
         self.position_encoder = nn.Sequential(nn.Conv1d(3, 32, kernel_size=1) if config.use_score_encoding else nn.Conv1d(2, 32, kernel_size=1), 
-                                              nn.SyncBatchNorm(32), nn.ReLU(),
-                                              nn.Conv1d(32, 64, kernel_size=1), nn.SyncBatchNorm(64),nn.ReLU(),
-                                              nn.Conv1d(64, 128, kernel_size=1), nn.SyncBatchNorm(128), nn.ReLU(),
-                                              nn.Conv1d(128, 256, kernel_size=1), nn.SyncBatchNorm(256), nn.ReLU(),
+                                              nn.BatchNorm1d(32), nn.ReLU(),
+                                              nn.Conv1d(32, 64, kernel_size=1), nn.BatchNorm1d(64),nn.ReLU(),
+                                              nn.Conv1d(64, 128, kernel_size=1), nn.BatchNorm1d(128), nn.ReLU(),
+                                              nn.Conv1d(128, 256, kernel_size=1), nn.BatchNorm1d(256), nn.ReLU(),
                                               nn.Conv1d(256, config.net_channels, kernel_size=1))
        
         self.dustbin=nn.Parameter(torch.tensor(1,dtype=torch.float32,device='cuda'))

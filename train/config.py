@@ -18,26 +18,26 @@ def add_argument_group(name):
 # Network
 net_arg = add_argument_group("Network")
 net_arg.add_argument(
-    "--model_name", type=str,default='SGM', help=""
+    "--model_name", type=str,default='SG', help=""
     "model for training")
 net_arg.add_argument(
-    "--config_path", type=str,default='configs/sgm.yaml', help=""
+    "--config_path", type=str,default='configs/sg.yaml', help=""
     "config path for model")
 
 # -----------------------------------------------------------------------------
 # Data
 data_arg = add_argument_group("Data")
 data_arg.add_argument(
-    "--rawdata_path", type=str, default='rawdata', help=""
+    "--rawdata_path", type=str, default='../datadump/raw_images', help=""
     "path for rawdata")
 data_arg.add_argument(
-    "--dataset_path", type=str, default='dataset', help=""
+    "--dataset_path", type=str, default='../datadump/dataset', help=""
     "path for dataset")
 data_arg.add_argument(
-    "--desc_path", type=str, default='desc', help=""
+    "--desc_path", type=str, default='../datadump/features', help=""
     "path for descriptor(kpt) dir")
 data_arg.add_argument(
-    "--num_kpt", type=int, default=1000, help=""
+    "--num_kpt", type=int, default=500, help=""
     "number of kpt for training")
 data_arg.add_argument(
     "--input_normalize", type=str, default='img', help=""
@@ -46,7 +46,7 @@ data_arg.add_argument(
     "--data_aug", type=str2bool, default=True, help=""
     "apply kpt coordinate homography augmentation")
 data_arg.add_argument(
-    "--desc_suffix", type=str, default='suffix', help=""
+    "--desc_suffix", type=str, default='_sp_500.hdf5', help=""
     "desc file suffix")
 
 

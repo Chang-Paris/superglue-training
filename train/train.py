@@ -64,7 +64,7 @@ def train(model, train_loader, valid_loader, config,model_config):
     if config.local_rank==0:
         writer=SummaryWriter(os.path.join(config.log_base,'log_file'))
 
-    train_loader.sampler.set_epoch(start_step*config.train_batch_size//len(train_loader.dataset))
+    #train_loader.sampler.set_epoch(start_step*config.train_batch_size//len(train_loader.dataset))
     pre_avg_loss=0
     
     progress_bar=trange(start_step, config.train_iter,ncols=config.tqdm_width) if config.local_rank==0 else range(start_step, config.train_iter)
@@ -72,9 +72,9 @@ def train(model, train_loader, valid_loader, config,model_config):
         try:
             train_data = next(train_loader_iter)
         except StopIteration:
-            if config.local_rank==0:
-                print('epoch: ',step*config.train_batch_size//len(train_loader.dataset))
-            train_loader.sampler.set_epoch(step*config.train_batch_size//len(train_loader.dataset))
+            #if config.local_rank==0:
+                #print('epoch: ',step*config.train_batch_size//len(train_loader.dataset))
+            #train_loader.sampler.set_epoch(step*config.train_batch_size//len(train_loader.dataset))
             train_loader_iter = iter(train_loader)
             train_data = next(train_loader_iter)
     
