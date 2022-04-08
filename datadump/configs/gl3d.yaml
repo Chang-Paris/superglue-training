@@ -1,7 +1,7 @@
 data_name: gl3d_train
-rawdata_dir: gl3d_rawdata
-feature_dump_dir: dump_desc_dir
-dataset_dump_dir: dataset_dir
+rawdata_dir: raw_images
+feature_dump_dir: features
+dataset_dump_dir: dataset
 pairs_per_seq: 1000
 dump_train: True
 dump_valid: True
@@ -21,10 +21,10 @@ min_corr: 25
 min_incorr: 10
 
 extractor:
-  name: root #root or sp
-  num_kpt: 1000
+  name: sp #root or sp
+  num_kpt: 500
   resize: [-1] 
-  overwrite: False
-  extract: False
-  num_process: 4
+  overwrite: True
+  extract: True
+  num_process: 2
   det_th: 0.00001
