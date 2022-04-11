@@ -36,12 +36,12 @@ def main(config,model_config):
            collate_fn=train_dataset.collate_fn, sampler=train_sampler)
 
     valid_dataset = Offline_Dataset(config,'valid')
-    #valid_sampler = torch.utils.data.distributed.DistributedSampler(valid_dataset,shuffle=False)
+    valid_sampler = torch.utils.data.Sampler(valid_dataset)
     valid_loader=torch.utils.data.DataLoader(valid_dataset, batch_size=config.train_batch_size,
-                collate_fn=valid_dataset.collate_fn)
+                collate_fn=valid_dataset.collate_fn, sampler=valid_sampler)
     
-    if config.local_rank==0:
-        print('start training .....')
+    print('start training .....')
+    exit()
     train(model,train_loader, valid_loader, config,model_config)
 
 if __name__ == "__main__":
