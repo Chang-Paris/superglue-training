@@ -1,0 +1,7 @@
+/datadump/dataset
+/datadump/raw_images
+/datadump/features
+/train/log/
+/.idea
+
+*.pyc
