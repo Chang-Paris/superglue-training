@@ -36,7 +36,7 @@ class attention_block(nn.Module):
         self.query_filter=nn.Conv1d(channels, channels, kernel_size=1)
         self.key_filter=nn.Conv1d(channels,channels,kernel_size=1)
         self.value_filter=nn.Conv1d(channels,channels,kernel_size=1)
-        self.attention_filter=nn.Sequential(nn.Conv1d(2*channels,2*channels, kernel_size=1),nn.SyncBatchNorm(2*channels), nn.ReLU(),
+        self.attention_filter=nn.Sequential(nn.Conv1d(2*channels,2*channels, kernel_size=1),nn.BatchNorm1d(2*channels), nn.ReLU(),
                                              nn.Conv1d(2*channels, channels, kernel_size=1))
         self.mh_filter=nn.Conv1d(channels, channels, kernel_size=1)
 

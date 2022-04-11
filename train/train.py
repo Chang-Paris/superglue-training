@@ -19,12 +19,10 @@ def train_step(optimizer, model, match_loss, data,step,pre_avg_loss):
     data['step']=step
     result=model(data,test_mode=False)
     loss_res=match_loss.run(data,result)
-    
+    print(loss_res)
+
     optimizer.zero_grad()
     loss_res['total_loss'].backward()
-    #apply reduce on all record tensor
-    for key in loss_res.keys():
-        loss_res[key]=train_utils.reduce_tensor(loss_res[key],'mean')
   
     if loss_res['total_loss']<7*pre_avg_loss or step<200 or pre_avg_loss==0:
         optimizer.step()
@@ -35,7 +33,7 @@ def train_step(optimizer, model, match_loss, data,step,pre_avg_loss):
     return loss_res,unusual_loss
 
 
-def train(model, train_loader, valid_loader, config,model_config):
+def train(model, train_loader, valid_loader, config,model_config, device):
     model.train()
     optimizer = optim.Adam(model.parameters(), lr=config.train_lr)
     
@@ -49,9 +47,8 @@ def train(model, train_loader, valid_loader, config,model_config):
     checkpoint_path = os.path.join(config.log_base, 'checkpoint.pth')
     config.resume = os.path.isfile(checkpoint_path)
     if config.resume:
-        if config.local_rank==0:
-            print('==> Resuming from checkpoint..')
-        checkpoint = torch.load(checkpoint_path,map_location='cuda:{}'.format(config.local_rank))
+        print('==> Resuming from checkpoint..')
+        checkpoint = torch.load(checkpoint_path,map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
         best_acc = checkpoint['best_acc']
         start_step = checkpoint['step']
@@ -61,20 +58,15 @@ def train(model, train_loader, valid_loader, config,model_config):
         start_step = 0
     train_loader_iter = iter(train_loader)
     
-    if config.local_rank==0:
-        writer=SummaryWriter(os.path.join(config.log_base,'log_file'))
+    writer=SummaryWriter(os.path.join(config.log_base,'log_file'))
 
-    #train_loader.sampler.set_epoch(start_step*config.train_batch_size//len(train_loader.dataset))
     pre_avg_loss=0
-    
-    progress_bar=trange(start_step, config.train_iter,ncols=config.tqdm_width) if config.local_rank==0 else range(start_step, config.train_iter)
+    progress_bar=trange(start_step, config.train_iter,ncols=config.tqdm_width)
     for step in progress_bar:
         try:
             train_data = next(train_loader_iter)
         except StopIteration:
-            #if config.local_rank==0:
-                #print('epoch: ',step*config.train_batch_size//len(train_loader.dataset))
-            #train_loader.sampler.set_epoch(step*config.train_batch_size//len(train_loader.dataset))
+            print('epoch: ',step*config.train_batch_size//len(train_loader.dataset))
             train_loader_iter = iter(train_loader)
             train_data = next(train_loader_iter)
     
@@ -92,16 +84,11 @@ def train(model, train_loader, valid_loader, config,model_config):
         if unusual_loss and config.local_rank==0:
             print('unusual loss! pre_avg_loss: ',pre_avg_loss,'cur_loss: ',loss_res['total_loss'].data)
         #log
-        if config.local_rank==0 and step%config.log_intv==0 and not unusual_loss:
+        if step%config.log_intv==0 and not unusual_loss:
             writer.add_scalar('TotalLoss',loss_res['total_loss'],step)
             writer.add_scalar('CorrLoss',loss_res['loss_corr'],step)
             writer.add_scalar('InCorrLoss', loss_res['loss_incorr'], step)
-            writer.add_scalar('dustbin', model.module.dustbin, step)
-
-            if config.model_name=='SGM':
-                writer.add_scalar('SeedConfLoss', loss_res['loss_seed_conf'], step)
-                writer.add_scalar('MidCorrLoss', loss_res['loss_corr_mid'].sum(), step)
-                writer.add_scalar('MidInCorrLoss', loss_res['loss_incorr_mid'].sum(), step)
+            writer.add_scalar('dustbin', model.dustbin, step)
             
 
         # valid ans save

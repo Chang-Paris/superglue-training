@@ -45,10 +45,6 @@ def valid(valid_loader, model,match_loss, config,model_config):
         total_recall/=num_pair
         total_acc_mid/=num_pair
 
-        #apply tensor reduction
-        total_loss,total_acc_corr,total_acc_incorr,total_precision,total_recall,total_acc_mid=train_utils.reduce_tensor(total_loss,'sum'),\
-                        train_utils.reduce_tensor(total_acc_corr,'mean'),train_utils.reduce_tensor(total_acc_incorr,'mean'),\
-                        train_utils.reduce_tensor(total_precision,'mean'),train_utils.reduce_tensor(total_recall,'mean'),train_utils.reduce_tensor(total_acc_mid,'mean')
     model.train()
     return total_loss,total_acc_corr,total_acc_incorr,total_precision,total_recall,total_acc_mid
 

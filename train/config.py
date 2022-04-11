@@ -74,7 +74,7 @@ train_arg.add_argument(
     "--train_lr", type=float, default=1e-4, help=""
     "learning rate")
 train_arg.add_argument(
-    "--train_batch_size", type=int, default=16, help=""
+    "--train_batch_size", type=int, default=8, help=""
     "batch size")
 train_arg.add_argument(
     "--gpu_id", type=str,default='0', help='id(s) for CUDA_VISIBLE_DEVICES')
@@ -85,7 +85,7 @@ train_arg.add_argument(
     "--log_base", type=str, default="./log/", help=""
     "log path")
 train_arg.add_argument(
-    "--val_intv", type=int, default=20000, help=""
+    "--val_intv", type=int, default=20, help=""
     "validation interval")
 train_arg.add_argument(
     "--save_intv", type=int, default=1000, help=""
