@@ -25,15 +25,10 @@ def main(config,model_config):
     print(model)
     print("loaded")
 
-    #initialize ddp
-    #torch.cuda.set_device(config.local_rank)
-    device = torch.device(f'cuda:{config.local_rank}')
+    #initialize cuda
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f'Setting device to {device}')
     model.to(device)
-    #dist.init_process_group(backend='nccl',init_method='env://')
-    #model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[config.local_rank])
-    
-    if config.local_rank==0:
-        os.system('nvidia-smi')
 
     #initialize dataset
     train_dataset = Offline_Dataset(config,'train')
