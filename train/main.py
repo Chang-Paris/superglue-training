@@ -23,7 +23,6 @@ def main(config,model_config):
     else:
         raise NotImplementedError
     print(model)
-    print("loaded")
 
     #initialize cuda
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -32,10 +31,10 @@ def main(config,model_config):
 
     #initialize dataset
     train_dataset = Offline_Dataset(config,'train')
-    #train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset,shuffle=True)
+    train_sampler = torch.utils.data.Sampler(train_dataset)
     train_loader=torch.utils.data.DataLoader(train_dataset, batch_size=config.train_batch_size,
-           collate_fn=train_dataset.collate_fn)
-    
+           collate_fn=train_dataset.collate_fn, sampler=train_sampler)
+
     valid_dataset = Offline_Dataset(config,'valid')
     #valid_sampler = torch.utils.data.distributed.DistributedSampler(valid_dataset,shuffle=False)
     valid_loader=torch.utils.data.DataLoader(valid_dataset, batch_size=config.train_batch_size,
