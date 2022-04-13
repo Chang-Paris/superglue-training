@@ -22,6 +22,8 @@ root_folder = "data"
 depths = []
 undist_imgs = []
 chunks_set = []
+chunks_train = []
+chunks_test = []
 for chunk in os.listdir(data_folder):
     current_chunk = os.path.join(data_folder, chunk)
 
@@ -38,6 +40,12 @@ for chunk in os.listdir(data_folder):
     # get chunk list
     chunks_set.append(chunk)
 
+    # get training/test chunks list
+    if chunk in original_train:
+        chunks_train.append(chunk)
+    else:
+        chunks_test.append(chunk)
+
 
 # depth_list.txt
 with open(os.path.join(output_folder,"depth_list.txt"), "w") as outfile:
@@ -50,5 +58,11 @@ with open(os.path.join(output_folder,"image_list.txt"), "w") as outfile:
 # imageset_all.txt
 with open(os.path.join(output_folder,"imageset_all.txt"), "w") as outfile:
     outfile.write("\n".join(chunks_set))
-# todo imageset_train.txt
-# todo imageset_test.txt
+
+# imageset_train.txt
+with open(os.path.join(output_folder,"imageset_train.txt"), "w") as outfile:
+    outfile.write("\n".join(chunks_train))
+
+# imageset_test.txt
+with open(os.path.join(output_folder,"imageset_test.txt"), "w") as outfile:
+    outfile.write("\n".join(chunks_test))
