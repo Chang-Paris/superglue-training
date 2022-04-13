@@ -24,16 +24,13 @@ class gl3d_train(BaseDumper):
 
         #filtering seq list
         self.seq_list,self.train_list,self.valid_list=[],[],[]
-        """
         for seq in seq_train:
             if seq not in self.config['exclude_seq']:
                 self.train_list.append(seq)
         for seq in seq_valid:
             if seq not in self.config['exclude_seq']:
                 self.valid_list.append(seq)
-        """
-        self.valid_list = ["000000000000000000000001"]
-        self.train_list = ["00000000000000000000000k"]
+
         seq_list=[]
         if self.config['dump_train']:
             seq_list.append(self.train_list)
