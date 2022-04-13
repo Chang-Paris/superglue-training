@@ -21,6 +21,7 @@ with open(os.path.join(original_file_folder, "imageset_test.txt"), 'r') as f:
 root_folder = "data"
 depths = []
 undist_imgs = []
+chunks_set = []
 for chunk in os.listdir(data_folder):
     current_chunk = os.path.join(data_folder, chunk)
 
@@ -34,6 +35,9 @@ for chunk in os.listdir(data_folder):
     current_imgs_list = [os.path.join(root_folder, os.path.join(chunk, os.path.join("undist_images", filename))) for filename in sorted(os.listdir(undist_imgs_list))]
     undist_imgs.extend(current_imgs_list)
 
+    # get chunk list
+    chunks_set.append(chunk)
+
 
 # depth_list.txt
 with open(os.path.join(output_folder,"depth_list.txt"), "w") as outfile:
@@ -41,7 +45,10 @@ with open(os.path.join(output_folder,"depth_list.txt"), "w") as outfile:
 
 # image_list.txt
 with open(os.path.join(output_folder,"image_list.txt"), "w") as outfile:
-    outfile.write("\n".join(depths))
-# todo imageset_all.txt
+    outfile.write("\n".join(undist_imgs))
+
+# imageset_all.txt
+with open(os.path.join(output_folder,"imageset_all.txt"), "w") as outfile:
+    outfile.write("\n".join(chunks_set))
 # todo imageset_train.txt
 # todo imageset_test.txt
